@@ -13,14 +13,12 @@ public class Fibonacci {
             a=b;
             b=c;
 
-
-
         }
         return c;
     }
 
     public static void main(String[] args) {
-        int n = 10; // Example input
+        int n = 5; // Example input
         int result = fibonacci(n);
         System.out.println("Fibonacci(" + n + ") = " + result); // Output should be 55
     }

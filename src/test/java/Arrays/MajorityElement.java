@@ -1,5 +1,8 @@
 package Arrays;
 
+/** Given an array nums of size n, return the majority element.
+ The majority element is the element that appears more than ⌊n / 2⌋ times.
+ You may assume that the majority element always exists in the array.*/
 
 public class MajorityElement {
     public static int majorityElement(int[] nums) {
@@ -17,7 +20,7 @@ public class MajorityElement {
 
     }
         public static void main(String[] args) {
-        int[] nums = {3, 2, 3}; // Example input
+        int[] nums = {3, 2, 3,2,2}; // Example input
         int result = majorityElement(nums);
         System.out.println("Majority Element: " + result); // Output should be 3
     }
