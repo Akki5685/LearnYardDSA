@@ -14,13 +14,14 @@ public class MajorityElement {
             if (count == 0)
                 ans = num;
             count += num == ans ? 1 : -1;
+
         }
 
         return ans;
 
     }
         public static void main(String[] args) {
-        int[] nums = {3, 2, 3,2,2}; // Example input
+        int[] nums = {2,3,3,3,3,3,3,2,1,1,1,1,2,2}; // Example input
         int result = majorityElement(nums);
         System.out.println("Majority Element: " + result); // Output should be 3
     }
