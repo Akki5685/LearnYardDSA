@@ -1,4 +1,6 @@
- # Find the latest generated report folder and upload it as an artifact
+ Your idea is to create a unified platform for both automation and manual testers, allowing manual testers to automate without needing to code, using a low-code or no-code solution. This would enable both manual and automation engineers to collaborate seamlessly on tasks like regression testing. Additionally, your platform could introduce a feature that allows testers to start running a test script from a specific step (e.g., step 25) rather than starting from the beginning, saving time and streamlining the testing process when modifications are needed. This solution would bridge the gap between coding expertise and manual testing, enhancing efficiency.
+
+# Find the latest generated report folder and upload it as an artifact
 name: Upload Latest Test Report
 
 on:
