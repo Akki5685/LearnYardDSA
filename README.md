@@ -1,43 +1,63 @@
- # Find the latest generated report folder and upload it as an artifact
-name: Upload Latest Test Report
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  upload-latest-report:
-    runs-on: ubuntu-latest
-
+  find-and-upload-folder:
+    runs-on: self-hosted
+    outputs:
+      folder-path: ${{ steps.find-folder.outputs.item }}
     steps:
-      # Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Set up Git
+      uses: actions/checkout@v2
 
-      # Find the latest report folder in the TestResults directory
-      - name: Find the latest report folder
-        id: find_latest_folder
-        run: |
-          # Define the TestResults directory path
-          REPORT_DIR="${{github.workspace}}/TestResults"
+    - name: Find Latest Test Results Folder
+      id: find-folder
+      shell: powershell
+      run: |
+        # Set the target directory
+        $target_dir = 'D:\\GitHub Actions Trigger\\GitHub-Actions-Trigger\\TestResults'
+        
+        # Find the latest folder by LastWriteTime
+        $latest_folder = Get-ChildItem -Directory -Path $target_dir | 
+                         Sort-Object LastWriteTime -Descending | 
+                         Select-Object -First 1
+        
+        Write-Host "Latest folder: $($latest_folder.FullName)"
+        
+        # Set the latest folder path as output to be used in the next step
+        echo "::set-output name=item::$($latest_folder.FullName)"
+    - name: Upload Latest Test Results Folder
+      uses: actions/upload-artifact@v3
+      with:
+        name: latest-test-results-folder
+        path: ${{ steps.find-folder.outputs.item }}
 
-          # Find the most recent folder based on modification time
-          LATEST_FOLDER=$(ls -td ${REPORT_DIR}/*/ | head -1)
+    - name: Provide Folder Download Link
+      run: |
+        echo "You can download the uploaded folder from the Artifacts section of this workflow run."
+  find-and-upload-file:
+    runs-on: self-hosted
+    needs: find-and-upload-folder
+    outputs:
+      file-path: ${{ steps.find-file.outputs.item }}
+    steps:
+    - name: Set up Git
+      uses: actions/checkout@v2
 
-          # Check if a folder was found
-          if [ -z "$LATEST_FOLDER" ]; then
-            echo "No report folder found!"
-            exit 1
-          fi
-
-          # Output the folder path for use in subsequent steps
-          echo "Latest report folder: $LATEST_FOLDER"
-          echo "::set-output name=latest_report_folder::$LATEST_FOLDER"
-
-      # Upload the latest report folder as an artifact
-      - name: Upload report artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: latest-test-report
-          path: ${{ steps.find_latest_folder.outputs.latest_report_folder }}
+    - name: Find Latest Test Result File
+      id: find-file
+      shell: powershell
+      run: |
+        # Set the target directory
+        $target_dir = 'D:\\GitHub Actions Trigger\\GitHub-Actions-Trigger\\Test Result'
+        
+        # Find the latest file by LastWriteTime
+        $latest_file = Get-ChildItem -File -Path $target_dir | 
+                        Sort-Object LastWriteTime -Descending | 
+                        Select-Object -First 1
+        
+        Write-Host "Latest file: $($latest_file.FullName)"
+        
+        # Set the latest file path as output to be used in the next step
+        echo "::set-output name=item::$($latest_file.FullName)"
+    - name: Upload Latest Test Result File
+      uses: actions/upload-artifact@v3
+      with:
+        name: latest-test-result-file
+        path: ${{ steps.find-file.outputs.item }}
